@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.MoreVert
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -34,16 +36,15 @@ fun WeatherAppBar(
     title: String = "Title",
     icon: ImageVector? = null,
     isMainScreen: Boolean = true,
-    //elevation: Dp = 0.dp,
     navController: NavController,
     onAddActionClicked: () -> Unit = {},
     onButtonClicked: () -> Unit = {} ) {
 
     TopAppBar(title = {
         Text(text = title,
-            color = Color.Blue,
-            style = TextStyle(fontWeight = FontWeight.Bold,
-                fontSize = 15.sp),
+            color = Color(0xFFFFC400),
+            style = TextStyle(fontWeight = FontWeight.ExtraBold,
+                fontSize = 20.sp),
         )
     },
         actions = {
@@ -65,14 +66,19 @@ fun WeatherAppBar(
                   }
         },
         navigationIcon = {
+
                          if (icon != null) {
-                             Icon(imageVector = icon, contentDescription = null,
-                             modifier = Modifier.clickable {
+                             Icon(imageVector = icon,
+                                 contentDescription = null,
+                                 tint = Color.LightGray,
+                                 modifier = Modifier.clickable {
                                  onButtonClicked.invoke()
                              })
                          }
+
+
         },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(Color.Transparent))
+        colors = TopAppBarDefaults.smallTopAppBarColors(Color.Transparent))
 
 
 
