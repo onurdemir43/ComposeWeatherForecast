@@ -5,13 +5,20 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +50,7 @@ import com.onurdemir.composeweatherforecastapp.utils.formatDecimals
 import com.onurdemir.composeweatherforecastapp.widgets.HumidityWindPressureRow
 import com.onurdemir.composeweatherforecastapp.widgets.SunRow
 import com.onurdemir.composeweatherforecastapp.widgets.WeatherAppBar
+import com.onurdemir.composeweatherforecastapp.widgets.WeatherDetailRow
 import com.onurdemir.composeweatherforecastapp.widgets.WeatherStateImage
 
 @Composable
@@ -51,7 +59,7 @@ fun MainScreen(navController: NavController,
 
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)) {
-        value = mainViewModel.getWeatherData("eskişehir")
+        value = mainViewModel.getWeatherData("izmir")
     }.value
 
     if (weatherData.loading == true) {
@@ -124,10 +132,30 @@ fun MainContent(data: Weather) {
         HumidityWindPressureRow(weather = weatherItem)
         Divider()
         SunRow(weather = weatherItem)
+        Text(text = "This Week",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold)
+        
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize(),
+            color = Color(0xFFEEF1EF),
+            shape = RoundedCornerShape(size = 14.dp)
+        ) {
+            LazyColumn(modifier = Modifier.padding(2.dp),
+            contentPadding = PaddingValues(0.dp)) {
+                items(items = data.list) {
+                    WeatherDetailRow(weather = it)
+                }
+            }
+        }
     }
 
-
-
 }
+
+
+
+
 
 

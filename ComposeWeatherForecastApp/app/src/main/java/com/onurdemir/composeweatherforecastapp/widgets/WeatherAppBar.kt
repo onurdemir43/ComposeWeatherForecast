@@ -70,7 +70,7 @@ fun WeatherAppBar(
                          if (icon != null) {
                              Icon(imageVector = icon,
                                  contentDescription = null,
-                                 tint = Color.LightGray,
+                                 tint = Color.Gray,
                                  modifier = Modifier.clickable {
                                  onButtonClicked.invoke()
                              })
