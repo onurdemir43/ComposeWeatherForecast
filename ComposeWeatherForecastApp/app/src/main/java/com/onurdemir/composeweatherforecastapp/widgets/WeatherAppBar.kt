@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
@@ -114,14 +115,17 @@ fun WeatherAppBar(
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite Icon",
-                    modifier = Modifier.scale(0.9f)
+                    modifier = Modifier
+                        .scale(0.9f)
                         .clickable {
-                                   val dataList = title.split(",")
+                            val dataList = title.split(",")
                             favoriteViewModel
-                                .insertFavorite(Favorite(
-                                    city = dataList[0], //city name
-                                    country = dataList[1] //country code
-                                ))
+                                .insertFavorite(
+                                    Favorite(
+                                        city = dataList[0], //city name
+                                        country = dataList[1] //country code
+                                    )
+                                )
 
                         },
                     tint = Color.Red.copy(alpha = 0.6f)
