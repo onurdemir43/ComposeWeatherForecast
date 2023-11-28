@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,8 +45,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.onurdemir.composeweatherforecastapp.model.Favorite
 import com.onurdemir.composeweatherforecastapp.navigation.WeatherScreens
+import com.onurdemir.composeweatherforecastapp.screens.favorite.FavoriteViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +59,7 @@ fun WeatherAppBar(
     icon: ImageVector? = null,
     isMainScreen: Boolean = true,
     navController: NavController,
+    favoriteViewModel: FavoriteViewModel = hiltViewModel(),
     onAddActionClicked: () -> Unit = {},
     onButtonClicked: () -> Unit = {} ) {
 
@@ -105,6 +110,23 @@ fun WeatherAppBar(
                                  onButtonClicked.invoke()
                              })
                          }
+            if (isMainScreen) {
+                Icon(
+                    imageVector = Icons.Default.FavoriteBorder,
+                    contentDescription = "Favorite Icon",
+                    modifier = Modifier.scale(0.9f)
+                        .clickable {
+                                   val dataList = title.split(",")
+                            favoriteViewModel
+                                .insertFavorite(Favorite(
+                                    city = dataList[0], //city name
+                                    country = dataList[1] //country code
+                                ))
+
+                        },
+                    tint = Color.Red.copy(alpha = 0.6f)
+                )
+            }
 
 
         },
