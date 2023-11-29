@@ -1,6 +1,8 @@
 package com.onurdemir.composeweatherforecastapp.widgets
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -29,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +42,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -67,6 +71,11 @@ fun WeatherAppBar(
     val showDialog = remember {
         mutableStateOf(false)
     }
+
+    val showIt = remember {
+        mutableStateOf(false)
+    }
+    val context = LocalContext.current
 
     if (showDialog.value) {
         ShowSettingDropDownMenu(showDialog = showDialog, navController = navController)
@@ -112,24 +121,44 @@ fun WeatherAppBar(
                              })
                          }
             if (isMainScreen) {
-                Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = "Favorite Icon",
-                    modifier = Modifier
-                        .scale(0.9f)
-                        .clickable {
-                            val dataList = title.split(",")
-                            favoriteViewModel
-                                .insertFavorite(
-                                    Favorite(
-                                        city = dataList[0], //city name
-                                        country = dataList[1] //country code
-                                    )
-                                )
 
-                        },
-                    tint = Color.Red.copy(alpha = 0.6f)
-                )
+                val isAlreadyFavList = favoriteViewModel
+                    .favList.collectAsState().value.filter { item ->
+                        (item.city == title.split(",")[0])
+                    }
+
+                if (isAlreadyFavList.isNullOrEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = "Favorite Border",
+                        modifier = Modifier
+                            .scale(0.9f)
+                            .clickable {
+                                val dataList = title.split(",")
+                                favoriteViewModel
+                                    .insertFavorite(
+                                        Favorite(
+                                            city = dataList[0], //city name
+                                            country = dataList[1] //country code
+                                        )
+                                    ).run {
+                                        showIt.value = true
+                                    }
+
+                            },
+                        tint = Color.Red.copy(alpha = 0.6f)
+                    )
+                }else {
+
+                    Icon(imageVector = Icons.Default.Favorite,
+                        contentDescription = "Favorite Icon",
+                        tint = Color.Red.copy(alpha = 0.6f))
+
+                    ShowToast(context = context, showIt)
+                    showIt.value = false
+                }
+
+
             }
 
 
@@ -138,6 +167,15 @@ fun WeatherAppBar(
 
 
 
+
+}
+
+@Composable
+fun ShowToast(context: Context, showIt: MutableState<Boolean>) {
+
+    if (showIt.value) {
+        Toast.makeText(context, "Added to Favorites", Toast.LENGTH_SHORT).show()
+    }
 
 }
 
